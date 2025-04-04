@@ -1,5 +1,6 @@
 package com.diagramify;
 
+import com.diagramify.util.TokenUtils;
 import org.springframework.boot.env.PropertySourceLoader;
 import org.springframework.core.env.MapPropertySource;
 import org.springframework.core.env.PropertySource;
@@ -23,7 +24,7 @@ public class DiagramifyPropertySourceLoader implements PropertySourceLoader {
         for (String key : properties.stringPropertyNames()) {
 
             String rawValue = properties.getProperty(key).trim();
-            String diagramifyToken = extractToken(rawValue);
+            String diagramifyToken = TokenUtils.extractToken(rawValue);
             String cleanedValue = rawValue.replaceAll(diagramify_TOKEN_PATTERN, "").trim();
             System.out.println(diagramifyToken);
             cleanedProperties.put(key, cleanedValue);
@@ -37,11 +38,4 @@ public class DiagramifyPropertySourceLoader implements PropertySourceLoader {
         return new String[]{"properties"};
     }
 
-    public static String extractToken(String input) {
-
-        final String diagramify_TOKEN_EXTRACT_PATTERN = "::<(.*?)>::";
-
-        Matcher matcher = Pattern.compile(diagramify_TOKEN_EXTRACT_PATTERN).matcher(input);
-        return matcher.find() ?  matcher.group(1).trim(): null;
-    }
 }
